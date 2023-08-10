@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { capitalizeFirstChar } from "../utils/utils";
 import MultiRangeSlider from "./MultiRangeSlider";
 import Switch from "./Switch";
@@ -12,8 +11,8 @@ function ExpandedFilter({
   sliderMax,
 }: {
   selectedFilter: string;
-  setSelectedFilter: Function;
-  setIsExpanded: Function;
+  setSelectedFilter: (value: string) => void;
+  setIsExpanded: (value: boolean) => void;
   isExpanded: boolean;
   sliderMin: number;
   sliderMax: number;
@@ -25,7 +24,8 @@ function ExpandedFilter({
         name="brand"
         className="-mt-px inline-flex items-center gap-x-2 border py-3 pl-2 pr-4 text-left text-sm font-medium text-blue-600 first:mt-0 first:rounded-t-lg last:rounded-b-lg focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-600 dark:border-gray-700"
         onClick={(e) => {
-          setSelectedFilter(e.target.name);
+          const { name } = e.target as HTMLButtonElement;
+          setSelectedFilter(name);
           setIsExpanded(!isExpanded);
         }}
       >
@@ -48,7 +48,7 @@ function ExpandedFilter({
         </div>
       </button>
       <Switch test={selectedFilter}>
-        <div value="brand" className="flex flex-col gap-2 p-4">
+        <div data-value="brand" className="flex flex-col gap-2 p-4">
           <div className="flex">
             <input
               type="checkbox"
@@ -56,20 +56,20 @@ function ExpandedFilter({
               id="hs-default-checkbox"
             />
             <label
-              for="hs-default-checkbox"
+              htmlFor="hs-default-checkbox"
               className="ml-3 text-sm text-gray-500 dark:text-gray-400"
             >
               Default checkbox
             </label>
           </div>
         </div>
-        <div value="price" className="flex flex-col gap-2 p-4">
+        <div data-value="price" className="flex flex-col gap-2 p-4">
           <MultiRangeSlider
             min={sliderMin}
             max={sliderMax}
-            onChange={({ min, max }) =>
+            /*onChange={({ min, max }) =>
               console.log(`min = ${min}, max = ${max}`)
-            }
+            }*/
           />
         </div>
       </Switch>

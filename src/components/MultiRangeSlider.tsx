@@ -4,22 +4,23 @@ import {
   useCallback,
   useEffect,
   useLayoutEffect,
+  ChangeEvent,
 } from "react";
 
 type MultiRangeSliderProps = {
   min: number;
   max: number;
-  onChange: (min: number, max: number) => void;
+  //onChange: (min: number, max: number) => void;
 };
 
-function MultiRangeSlider({ min, max, onChange }: MultiRangeSliderProps) {
+function MultiRangeSlider({ min, max }: MultiRangeSliderProps) {
   const [minVal, setMinVal] = useState(min);
   const [maxVal, setMaxVal] = useState(max);
-  const [sliderWidth, setSliderWidth] = useState();
-  const minValRef = useRef(null);
-  const maxValRef = useRef(null);
-  const range = useRef(null);
-  const sliderWidthRef = useRef(null);
+  const [sliderWidth, setSliderWidth] = useState(0);
+  const minValRef = useRef<HTMLInputElement>(null);
+  const maxValRef = useRef<HTMLInputElement>(null);
+  const range = useRef<HTMLInputElement>(null);
+  const sliderWidthRef = useRef<HTMLInputElement>(null);
 
   const inputCSS = `
     highlight-color-transparent
@@ -38,7 +39,7 @@ function MultiRangeSlider({ min, max, onChange }: MultiRangeSliderProps) {
     [&::-webkit-slider-thumb]:appearance-none
     `;
 
-  function handleChange(e) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.name === "min") {
       const value = Math.min(+e.target.value, maxVal - 1);
       setMinVal(value);
@@ -51,24 +52,26 @@ function MultiRangeSlider({ min, max, onChange }: MultiRangeSliderProps) {
     }
   }
 
-  function handleSubmit(e) {
+  function handleSubmit(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Enter") {
-      const { name, value } = e.target;
+      const { name, value } = e.target as HTMLInputElement;
       if (name === "min") {
         if (+value > maxVal) return setMinVal(maxVal - 1);
         if (+value < min) return setMinVal(min);
-        return setMinVal(value);
+        return setMinVal(+value);
       }
       if (name === "max") {
         if (+value < minVal) return setMaxVal(minVal + 1);
         if (+value > max) return setMaxVal(max);
-        setMaxVal(value);
+        setMaxVal(+value);
       }
     }
   }
 
   useLayoutEffect(() => {
-    setSliderWidth(sliderWidthRef.current.offsetWidth);
+    if (sliderWidthRef.current) {
+      setSliderWidth(sliderWidthRef.current.offsetWidth);
+    }
   }, []);
 
   // Convert to percentage
@@ -103,10 +106,11 @@ function MultiRangeSlider({ min, max, onChange }: MultiRangeSliderProps) {
   }, [maxVal, getPercent]);
 
   // Get min and max values when their state changes
+  /*
   useEffect(() => {
     onChange({ min: minVal, max: maxVal });
   }, [minVal, maxVal, onChange]);
-
+*/
   return (
     <>
       <div className="relative mx-auto w-full max-w-sm">
@@ -155,7 +159,9 @@ function MultiRangeSlider({ min, max, onChange }: MultiRangeSliderProps) {
             value={minVal}
             placeholder="Minimal value"
             className="w-full max-w-[150px] rounded-md border-2 border-gray-200 px-4 py-3 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:bg-slate-900 dark:text-gray-400"
-            onChange={(e) => setMinVal(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setMinVal(+e.target.value)
+            }
             //onKeyDown={handleSubmit}
           />
           <input
@@ -164,7 +170,9 @@ function MultiRangeSlider({ min, max, onChange }: MultiRangeSliderProps) {
             value={maxVal}
             placeholder="Maximal value"
             className="w-full max-w-[150px] rounded-md border-2 border-gray-200 px-4 py-3 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:bg-slate-900 dark:text-gray-400"
-            onChange={(e) => setMaxVal(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setMaxVal(+e.target.value)
+            }
             //onKeyDown={handleSubmit}
           />
         </div>

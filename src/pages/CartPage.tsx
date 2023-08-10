@@ -12,9 +12,7 @@ import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { formatNumberToCurrency } from "../utils/utils";
 import ProgressBar from "../components/ProgressBar";
 
-type Props = {};
-
-function CartPage({}: Props) {
+function CartPage() {
   const [isHiddenCSS, setIsHiddenCSS] = useState("");
   const discountRef = useRef<HTMLInputElement>(null);
 

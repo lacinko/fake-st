@@ -6,9 +6,9 @@ function FilterList({
   setIsExpanded,
   isExpanded,
 }: {
-  categoryList?: String[];
-  setSelectedFilter: Function;
-  setIsExpanded: Function;
+  categoryList?: string[];
+  setSelectedFilter: (value: string) => void;
+  setIsExpanded: (value: boolean) => void;
   isExpanded: boolean;
 }) {
   return (
@@ -21,7 +21,8 @@ function FilterList({
             name={category}
             className="-mt-px inline-flex items-center gap-x-2 border px-4 py-3 text-left text-sm font-medium text-gray-800 first:mt-0 first:rounded-t-lg last:rounded-b-lg focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-600 dark:border-gray-700"
             onClick={(e) => {
-              setSelectedFilter(e.target.name);
+              const { name } = e.target as HTMLButtonElement;
+              setSelectedFilter(name);
               setIsExpanded(!isExpanded);
             }}
           >

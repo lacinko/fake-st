@@ -3,9 +3,7 @@ import ProgressBar from "../components/ProgressBar";
 import { Link } from "react-router-dom";
 import { Icons } from "../icons/icons";
 
-type Props = {};
-
-function CheckoutPage({}: Props) {
+function CheckoutPage() {
   const [orderDetails, setOrderDetails] = useState({
     email: "",
     phone: "",

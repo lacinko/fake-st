@@ -52,21 +52,28 @@ export const cartSlice = createSlice({
         (item: CartItem) => item.id === payload.id
       );
       if (cartItemIndex !== -1) {
-        // @ts-ignore
-        state.cart[cartItemIndex].quantity += 1;
+        const currentQuantity = state.cart[cartItemIndex].quantity;
+        state.cart[cartItemIndex].quantity =
+          typeof currentQuantity === "string"
+            ? parseInt(currentQuantity) + 1
+            : currentQuantity + 1;
       }
       if (cartItemIndex === -1) {
         state.cart.push(payload);
       }
     },
+
     removeItemFromCart: (state: CartState, action: PayloadAction<CartItem>) => {
       const { payload } = action;
       const cartItemIndex = state.cart.findIndex(
         (item: CartItem) => item.id === payload.id
       );
       if (cartItemIndex !== -1) {
-        // @ts-ignore
-        state.cart[cartItemIndex].quantity -= 1;
+        const currentQuantity = state.cart[cartItemIndex].quantity;
+        state.cart[cartItemIndex].quantity =
+          typeof currentQuantity === "string"
+            ? parseInt(currentQuantity) - 1
+            : currentQuantity - 1;
       }
     },
     updateCartItemQuantity: (

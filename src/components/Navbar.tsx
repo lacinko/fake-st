@@ -5,7 +5,7 @@ import { selectCartTotal } from "../redux/cart/cartSlice";
 import { useAppSelector } from "../redux/hooks";
 
 function Navbar() {
-  const [productCategories, setProductCategories] = useState<String[]>([]);
+  const [productCategories, setProductCategories] = useState([]);
   const cartTotal = useAppSelector((state) => selectCartTotal(state.cart));
   const isHidden = cartTotal.totalItems === 0 ? "hidden" : "";
 
@@ -14,7 +14,6 @@ function Navbar() {
       const data = await fetchProductCategories();
       setProductCategories(data);
     })();
-    return () => {};
   }, []);
 
   return (

@@ -8,9 +8,7 @@ import {
   selectDeliveryAndPaymentOption,
 } from "../redux/cart/cartSlice";
 
-type Props = {};
-
-function DeliveryPage({}: Props) {
+function DeliveryPage() {
   const dispatch = useAppDispatch();
   const delivery = useAppSelector((state) => state.cart.delivery);
   const payment = useAppSelector((state) => state.cart.payment);
