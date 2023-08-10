@@ -100,7 +100,7 @@ function Navbar() {
                 "first-letter:uppercase font-medium text-gray-600 hover:text-gray-400 dark:text-gray-400 dark:hover:text-gray-500";
               return (
                 <NavLink
-                  className={({ isActive, isPending }) =>
+                  className={({ isActive }) =>
                     isActive ? activeMenuItemCSS : inActiveMenuItemCSS
                   }
                   to={category as unknown as Partial<Path>}

@@ -5,12 +5,13 @@ function ProgressBar() {
   const stage = location.pathname.split("/")[2];
   const stageInt = parseInt(stage!);
   const progressBubbles = [1, 2, 3];
+  /*
   const progressBubbleLabels = [
     "Basket",
     "Shipping & Payment",
     "Delivery Information",
   ];
-
+  */
   function setProgressBarWidth(stage: number) {
     switch (stage) {
       case 1:

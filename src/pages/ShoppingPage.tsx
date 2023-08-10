@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ItemCard from "../components/ItemCard";
 import { ItemCardObject } from "../types/types";
 import Dropdown from "../components/Dropdown";
@@ -39,8 +39,8 @@ function ShoppingPage() {
   }
   useEffect(() => {
     (async () => {
-      const products = await getProducts(category!);
-      setProducts(products!);
+      const products = await getProducts(category as string);
+      setProducts(products);
     })();
   }, [category]);
 
@@ -48,9 +48,11 @@ function ShoppingPage() {
     return product.title.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
+  /*
   const uniqueCategories = [
     ...new Set(products.map((product: ItemCardObject) => product.category)),
   ];
+  */
 
   filteredProducts.sort((a: ItemCardObject, b: ItemCardObject) => {
     if (selectedSortingOption === "Cheapest") {
