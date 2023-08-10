@@ -16,7 +16,7 @@ type MultiRangeSliderProps = {
 function MultiRangeSlider({ min, max }: MultiRangeSliderProps) {
   const [minVal, setMinVal] = useState(min);
   const [maxVal, setMaxVal] = useState(max);
-  const [sliderWidth, setSliderWidth] = useState(0);
+  //const [sliderWidth, setSliderWidth] = useState(0);
   const minValRef = useRef<HTMLInputElement>(null);
   const maxValRef = useRef<HTMLInputElement>(null);
   const range = useRef<HTMLInputElement>(null);
@@ -51,7 +51,7 @@ function MultiRangeSlider({ min, max }: MultiRangeSliderProps) {
       e.target.value = value.toString();
     }
   }
-
+  /*
   function handleSubmit(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Enter") {
       const { name, value } = e.target as HTMLInputElement;
@@ -67,11 +67,11 @@ function MultiRangeSlider({ min, max }: MultiRangeSliderProps) {
       }
     }
   }
-
+  */
   useLayoutEffect(() => {
-    if (sliderWidthRef.current) {
+    /*if (sliderWidthRef.current) {
       setSliderWidth(sliderWidthRef.current.offsetWidth);
-    }
+    }*/
   }, []);
 
   // Convert to percentage

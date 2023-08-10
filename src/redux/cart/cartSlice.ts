@@ -178,7 +178,7 @@ cartListenerMiddleware.startListening({
     applyDiscount,
     selectDeliveryAndPaymentOption
   ),
-  effect: (action, listernerApi: MiddlewareAPI) => {
+  effect: (_, listernerApi: MiddlewareAPI) => {
     localStorage.setItem(
       "cartItems",
       JSON.stringify(listernerApi.getState().cart)
