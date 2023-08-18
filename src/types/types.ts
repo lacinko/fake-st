@@ -11,3 +11,8 @@ export type ItemCardObject = {
   };
   createdAt: Date;
 };
+
+export interface User {
+  username: string;
+  //password: string;
+}

@@ -10,6 +10,8 @@ import { store } from "./redux/store.ts";
 import CartPage from "./pages/CartPage.tsx";
 import DeliveryPage from "./pages/DeliveryPage.tsx";
 import CheckoutPage from "./pages/CheckoutPage.tsx";
+import LoginPage from "./pages/LoginPage.tsx";
+import ProfilePage from "./pages/ProfilePage.tsx";
 import("preline");
 
 const router = createBrowserRouter([
@@ -38,6 +40,14 @@ const router = createBrowserRouter([
             element: <CheckoutPage />,
           },
         ],
+      },
+      {
+        path: "login",
+        element: <LoginPage />,
+      },
+      {
+        path: "user-profile",
+        element: <ProfilePage />,
       },
     ],
   },

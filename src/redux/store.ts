@@ -3,15 +3,23 @@ import cartReducer, {
   cartListenerMiddleware,
   initialState,
 } from "./cart/cartSlice";
+import authReducer from "./user/userSlice";
+import { api } from "./api/authApi";
 
 export const store = configureStore({
   reducer: {
     cart: cartReducer,
+    auth: authReducer,
+    [api.reducerPath]: api.reducer,
   },
+  devTools: import.meta.env.DEV,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().prepend(cartListenerMiddleware.middleware),
+    getDefaultMiddleware().prepend(
+      cartListenerMiddleware.middleware,
+      api.middleware
+    ),
   preloadedState: {
-    cart: JSON.parse(localStorage.getItem("cartItems")!) || initialState,
+    cart: JSON.parse(localStorage.getItem("cartItems") || "") || initialState,
   },
 });
 

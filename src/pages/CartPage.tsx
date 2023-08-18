@@ -69,7 +69,7 @@ function CartPage() {
         const totalItemPrice = item.price * +item.quantity;
         return (
           <div
-            className="relative mx-4 mt-6 rounded-md bg-slate-50 px-2 py-4"
+            className="relative mx-4 mt-6 rounded-md bg-slate-50 px-2 py-4 md:flex md:items-start md:justify-between"
             key={item.id}
           >
             <button
@@ -97,8 +97,8 @@ function CartPage() {
                 <p className="mt-1 text-xs font-medium text-green-700">Stock</p>
               </div>
             </div>
-            <div className="mt-2 flex justify-between">
-              <div className="flex gap-4">
+            <div className="mt-2 flex justify-between md:mr-2 md:gap-8">
+              <div className="flex gap-4 md:gap-0">
                 <input
                   type="number"
                   className="block w-12 rounded-md border-2 border-gray-200 px-2 py-1 text-sm focus:border-blue-500 focus:ring-blue-500"
@@ -119,7 +119,7 @@ function CartPage() {
                     );
                   }}
                 />
-                <div className="flex justify-between gap-1">
+                <div className="flex justify-between gap-1 md:flex-col-reverse md:gap-0">
                   <button
                     type="button"
                     className="inline-flex items-center justify-center gap-2 rounded-full border bg-white px-2 py-1 align-middle text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 focus:ring-offset-white dark:border-gray-700 dark:bg-slate-900 dark:text-gray-400 dark:hover:bg-slate-800 dark:hover:text-white dark:focus:ring-offset-gray-800"
@@ -149,51 +149,59 @@ function CartPage() {
           </div>
         );
       })}
-      <div className="mx-6 my-6 flex flex-col gap-2">
-        <p className="inline-flex justify-between">
-          Total excl. VAT{" "}
-          <span>{formatNumberToCurrency(cartTotalBeforeTax, "USD")}</span>
-        </p>
-        <p className="inline-flex justify-between font-bold">
-          Estimated price{" "}
-          <span>{formatNumberToCurrency(cartTotal.totalAmount, "USD")}</span>
-        </p>
-        <div
-          className="mt-6 inline-flex items-center gap-2"
-          onClick={toggleInputField}
-        >
-          <button
-            type="button"
-            className="inline-flex items-center justify-center gap-2 rounded-full border border-transparent bg-blue-500 px-2 py-1 text-sm font-semibold text-white transition-all hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
-          >
-            +
-          </button>
-          <p>Use discount / gift voucher</p>
+      <div className="mx-6 my-6 flex flex-col gap-2 md:flex-row md:justify-between">
+        <div className="flex flex-col gap-2">
+          <p className="inline-flex justify-between">
+            Total excl. VAT{" "}
+            <span>{formatNumberToCurrency(cartTotalBeforeTax, "USD")}</span>
+          </p>
+          <p className="inline-flex justify-between font-bold">
+            Estimated price{" "}
+            <span>{formatNumberToCurrency(cartTotal.totalAmount, "USD")}</span>
+          </p>
         </div>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            className={`${isHiddenCSS} block w-full rounded-md border-2 border-gray-200 px-2 py-1 text-sm focus:border-blue-500 focus:ring-blue-500`}
-            ref={discountRef}
-          />
-          <button
-            type="button"
-            className={`${isHiddenCSS} inline-flex items-center justify-center gap-2 rounded-sm border border-transparent bg-blue-500 px-2 py-1 text-sm font-semibold uppercase text-white transition-all hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800`}
-            onClick={handleDiscountSubmit}
+        <div className="flex flex-col gap-2">
+          <div
+            className="mt-6 inline-flex items-center gap-2 md:mt-0"
+            onClick={toggleInputField}
           >
-            Apply
-          </button>
+            <button
+              type="button"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-transparent bg-blue-500 px-2 py-1 text-sm font-semibold text-white transition-all hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+            >
+              +
+            </button>
+            <p>Use discount / gift voucher</p>
+          </div>
+          <div>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                className={`${isHiddenCSS} block w-full rounded-md border-2 border-gray-200 px-2 py-1 text-sm focus:border-blue-500 focus:ring-blue-500`}
+                ref={discountRef}
+              />
+              <button
+                type="button"
+                className={`${isHiddenCSS} inline-flex items-center justify-center gap-2 rounded-sm border border-transparent bg-blue-500 px-2 py-1 text-sm font-semibold uppercase text-white transition-all hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800`}
+                onClick={handleDiscountSubmit}
+              >
+                Apply
+              </button>
+            </div>
+          </div>
+          <p className="text-sm text-red-500">
+            {discount.errorMessage && discount.errorMessage}
+          </p>
+          <p className="text-sm text-green-500">
+            {discount.message && discount.message}
+          </p>
         </div>
-        <p className="text-sm text-red-500">
-          {discount.errorMessage && discount.errorMessage}
-        </p>
-        <p className="text-sm text-green-500">
-          {discount.message && discount.message}
-        </p>
+      </div>
+      <div className="flex md:justify-end">
         <Link
           to="/cart/2"
           type="button"
-          className={`mt-6 inline-flex items-center justify-center gap-2 rounded-sm border border-transparent bg-blue-500 py-2 text-sm font-semibold uppercase text-white transition-all hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800`}
+          className={`mx-6 mt-6 inline-flex w-full items-center justify-center gap-2 rounded-sm border border-transparent bg-blue-500 py-2 text-sm font-semibold uppercase text-white transition-all hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 md:w-auto md:px-6`}
         >
           Continue
         </Link>
