@@ -1,11 +1,20 @@
-import Button from "../components/Button";
-import { useAuth } from "../redux/user/userHooks";
+import { useState } from 'react'
+import Button from '../components/Button'
+import { useAppDispatch } from '../redux/hooks'
+import { useAuth } from '../redux/user/userHooks'
+import { logout } from '../redux/user/userSlice'
 
 function ProfilePage() {
-  const { user } = useAuth();
+  const { user } = useAuth()
+  const [orders, setOrders] = useState(
+    JSON.parse(localStorage.getItem('orders') as string)
+  )
+  console.log(orders)
+  const dispatch = useAppDispatch()
+  console.log('PROFILE PAGE')
 
   function handleLogout() {
-    console.log("logout");
+    dispatch(logout())
   }
 
   return (
@@ -44,12 +53,15 @@ function ProfilePage() {
         <span className="text-xl font-bold uppercase tracking-wider text-blue-500">
           My Orders
         </span>
+        {orders?.map((order) => (
+          <div>{order.id}</div>
+        ))}
       </button>
       <Button handleOnClick={handleLogout} styles="w-full mt-8 uppercase">
         Logout
       </Button>
     </div>
-  );
+  )
 }
 
-export default ProfilePage;
+export default ProfilePage

@@ -1,19 +1,21 @@
-import { Link } from "react-router-dom";
-import ProgressBar from "../components/ProgressBar";
-import OptionsList from "../components/OptionsList";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { Link } from 'react-router-dom'
+import ProgressBar from '../components/ProgressBar'
+import OptionsList from '../components/OptionsList'
+import { useAppDispatch, useAppSelector } from '../redux/hooks'
 import {
   CartState,
   selectDeliveryAndPaymentOption,
-} from "../redux/cart/cartSlice";
-import { formatNumberToCurrency } from "../utils/utils";
-import { deliveryOptions, paymentOptions } from "../redux/cart/OrderOptions";
+} from '../redux/cart/cartSlice'
+import { formatNumberToCurrency } from '../utils/utils'
+import { deliveryOptions, paymentOptions } from '../redux/cart/OrderOptions'
 
 function DeliveryPage() {
-  const dispatch = useAppDispatch();
-  const delivery = useAppSelector((state) => state.cart.delivery);
-  const payment = useAppSelector((state) => state.cart.payment);
-  const cart = useAppSelector((state) => state.cart);
+  const dispatch = useAppDispatch()
+  const delivery = useAppSelector((state) => state.cart.delivery)
+  const payment = useAppSelector((state) => state.cart.payment)
+  const cart = useAppSelector((state) => state.cart)
+  const disabledCSS =
+    delivery && payment ? '' : 'opacity-50 pointer-events-none'
 
   return (
     <div className="my-4 flex flex-col gap-2">
@@ -50,18 +52,18 @@ function DeliveryPage() {
             <Link
               to="/cart/3"
               type="button"
-              className={`mt-6 inline-flex w-full items-center justify-center gap-2 rounded-sm border border-transparent bg-blue-500 py-2 text-sm font-semibold uppercase text-white transition-all hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 md:w-auto md:px-6`}
+              className={`${disabledCSS} mt-6 inline-flex w-full items-center justify-center gap-2 rounded-sm border border-transparent bg-blue-500 py-2 text-sm font-semibold uppercase text-white transition-all hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 md:w-auto md:px-6`}
             >
               Continue
             </Link>
           </div>
         </div>
-        <div className="hidden md:flex md:w-[35%] md:items-start">
-          {cart.cart.map((item) => {
-            const totalItemPrice = item.price * +item.quantity;
+        <div className="hidden md:flex md:w-[35%] md:flex-col ">
+          {cart.items.map((item) => {
+            const totalItemPrice = item.price * +item.quantity
             return (
               <div
-                className="relative mx-4 mt-6 rounded-md bg-slate-50 px-2 py-4 md:flex md:items-start md:justify-between"
+                className="relative mx-4 mt-6 rounded-md bg-slate-50 px-2 py-4 md:flex md:flex-col md:items-start md:justify-between"
                 key={item.id}
               >
                 <div className="flex gap-2">
@@ -84,16 +86,16 @@ function DeliveryPage() {
                 </div>
                 <div className="mt-2 flex justify-between md:mr-2 md:gap-8">
                   <p className="font-semibold text-emerald-700">
-                    {formatNumberToCurrency(totalItemPrice, "USD")}
+                    {formatNumberToCurrency(totalItemPrice, 'USD')}
                   </p>
                 </div>
               </div>
-            );
+            )
           })}
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default DeliveryPage;
+export default DeliveryPage

@@ -1,67 +1,74 @@
-import { useEffect, useState } from "react";
-import ProgressBar from "../components/ProgressBar";
-import { Link } from "react-router-dom";
-import { Icons } from "../icons/icons";
-import { useAppSelector } from "../redux/hooks";
-import { formatNumberToCurrency } from "../utils/utils";
-import { deliveryOptions, paymentOptions } from "../redux/cart/OrderOptions";
-import { selectCartTotal } from "../redux/cart/cartSlice";
+import { useEffect, useState } from 'react'
+import ProgressBar from '../components/ProgressBar'
+import { Link } from 'react-router-dom'
+import { Icons } from '../icons/icons'
+import { useAppSelector } from '../redux/hooks'
+import { formatNumberToCurrency } from '../utils/utils'
+import { deliveryOptions, paymentOptions } from '../redux/cart/OrderOptions'
+import { selectCartTotal } from '../redux/cart/cartSlice'
 
 function CheckoutPage() {
-  const delivery = useAppSelector((state) => state.cart.delivery);
-  const payment = useAppSelector((state) => state.cart.payment);
-  const cart = useAppSelector((state) => state.cart);
-  const cartTotal = useAppSelector((state) => selectCartTotal(state.cart));
-  const cartTotalBeforeTax = cartTotal.totalAmount / 1.21;
+  const delivery = useAppSelector((state) => state.cart.delivery)
+  const payment = useAppSelector((state) => state.cart.payment)
+  const cart = useAppSelector((state) => state.cart)
+  const cartTotal = useAppSelector((state) => selectCartTotal(state.cart))
+  const cartTotalBeforeTax = cartTotal.totalAmount / 1.21
 
   const deliveryOption = deliveryOptions.find(
     (option) => option.id === delivery
-  );
-  const paymentOption = paymentOptions.find((option) => option.id === payment);
+  )
+  const paymentOption = paymentOptions.find((option) => option.id === payment)
 
   const mobilePrefixes = [
     {
-      image: "https://cdn.alza.cz/images/flags/country/cz.svg",
-      prefix: "+420",
+      image: 'https://cdn.alza.cz/images/flags/country/cz.svg',
+      prefix: '+420',
     },
     {
-      image: "https://cdn.alza.cz/images/flags/country/sk.svg",
-      prefix: "+421",
+      image: 'https://cdn.alza.cz/images/flags/country/sk.svg',
+      prefix: '+421',
     },
     {
-      image: "https://cdn.alza.cz/images/flags/country/de.svg",
-      prefix: "+49",
+      image: 'https://cdn.alza.cz/images/flags/country/de.svg',
+      prefix: '+49',
     },
     {
-      image: "https://cdn.alza.cz/images/flags/country/at.svg",
-      prefix: "+43",
+      image: 'https://cdn.alza.cz/images/flags/country/at.svg',
+      prefix: '+43',
     },
     {
-      image: "https://cdn.alza.cz/images/flags/country/hu.svg",
-      prefix: "+36",
+      image: 'https://cdn.alza.cz/images/flags/country/hu.svg',
+      prefix: '+36',
     },
     {
-      image: "https://cdn.alza.cz/Styles/images/svg/globe-earth-blue.svg",
-      prefix: "",
+      image: 'https://cdn.alza.cz/Styles/images/svg/globe-earth-blue.svg',
+      prefix: '',
     },
-  ];
+  ]
   const [orderDetails, setOrderDetails] = useState({
-    email: "",
+    email: '',
     phone: {
       image: mobilePrefixes[0].image,
       prefix: mobilePrefixes[0].prefix,
-      number: "",
+      number: '',
     },
-    errorMsgEmail: "",
-    errorMsgPhone: "",
-    inputBorderEmailCSS: "",
-    inputBorderPhoneCSS: "",
-  });
-  const [isExpanded, setIsExpanded] = useState(false);
-  const expandedCSS = isExpanded ? "flex" : "hidden";
+    errorMsgEmail: '',
+    errorMsgPhone: '',
+    inputBorderEmailCSS: '',
+    inputBorderPhoneCSS: '',
+  })
+  const [isExpanded, setIsExpanded] = useState(false)
+  const expandedCSS = isExpanded ? 'flex' : 'hidden'
+  const disabledCSS =
+    orderDetails.phone.number &&
+    orderDetails.email &&
+    !orderDetails.errorMsgEmail &&
+    !orderDetails.errorMsgPhone
+      ? ''
+      : 'opacity-50 pointer-events-none'
 
   function handleDropDown() {
-    setIsExpanded((prev) => !prev);
+    setIsExpanded((prev) => !prev)
   }
 
   function selectPhonePrefix(idx: number) {
@@ -72,89 +79,94 @@ function CheckoutPage() {
         prefix: mobilePrefixes[idx].prefix,
         number: prev.phone.number,
       },
-    }));
-    setIsExpanded(false);
+    }))
+    setIsExpanded(false)
   }
 
   function handleOrderSubmit() {
-    console.log("Order submitted");
+    const order = {
+      id: `ORD-${Math.floor(Math.random() * 1000000)}`,
+      email: orderDetails.email,
+      phone: `${orderDetails.phone.prefix} ${orderDetails.phone.number}`,
+      delivery: deliveryOption?.label,
+      payment: paymentOption?.label,
+      cart: cart.items,
+      total: formatNumberToCurrency(cartTotal.totalAmount, 'USD'),
+    }
+    localStorage.setItem('orders', JSON.stringify([order]))
   }
 
   useEffect(() => {
     //EMAIL
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-    if (orderDetails.email !== "" && !emailRegex.test(orderDetails.email)) {
+    if (orderDetails.email !== '' && !emailRegex.test(orderDetails.email)) {
       setOrderDetails((prev) => ({
         ...prev,
-        errorMsgEmail: "Please enter a valid email",
-        inputBorderEmailCSS: "ring-2 ring-red-500",
-      }));
-    } else if (orderDetails.email !== "") {
+        errorMsgEmail: 'Please enter a valid email',
+        inputBorderEmailCSS: 'ring-2 ring-red-500',
+      }))
+    } else if (orderDetails.email !== '') {
       setOrderDetails((prev) => ({
         ...prev,
-        errorMsgEmail: "",
-        inputBorderEmailCSS: "ring-2 ring-green-500",
-      }));
+        errorMsgEmail: '',
+        inputBorderEmailCSS: 'ring-2 ring-green-500',
+      }))
     }
 
-    if (orderDetails.email === "") {
+    if (orderDetails.email === '') {
       setOrderDetails((prev) => ({
         ...prev,
-        errorMsgEmail: "",
-        inputBorderEmailCSS: "",
-      }));
+        errorMsgEmail: '',
+        inputBorderEmailCSS: '',
+      }))
     }
 
     //PHONE
-    const czechPhoneRegex = /^[1-9][0-9]{2} ?[0-9]{3} ?[0-9]{3}$/;
-    const slovakPhoneRegex = /^[1-9][0-9]{2} ?[0-9]{3} ?[0-9]{3}$/;
-    const germanPhoneRegex = /^[1-9][0-9]{3} ?[0-9]{3} ?[0-9]{4}$/;
-    const austrianPhoneRegex = /^[1-9][0-9]{3} ?[0-9]{3} ?[0-9]{4}$/;
-    const hungarianPhoneRegex = /^[1-9][0-9]{1} ?[0-9]{3} ?[0-9]{4}$/;
+    const czechPhoneRegex = /^[1-9][0-9]{2} ?[0-9]{3} ?[0-9]{3}$/
+    const slovakPhoneRegex = /^[1-9][0-9]{2} ?[0-9]{3} ?[0-9]{3}$/
+    const germanPhoneRegex = /^[1-9][0-9]{3} ?[0-9]{3} ?[0-9]{4}$/
+    const austrianPhoneRegex = /^[1-9][0-9]{3} ?[0-9]{3} ?[0-9]{4}$/
+    const hungarianPhoneRegex = /^[1-9][0-9]{1} ?[0-9]{3} ?[0-9]{4}$/
 
     if (
-      (orderDetails.phone.number !== "" &&
-        orderDetails.phone.prefix === "+420" &&
+      (orderDetails.phone.number !== '' &&
+        orderDetails.phone.prefix === '+420' &&
         !czechPhoneRegex.test(orderDetails.phone.number)) ||
-      (orderDetails.phone.number !== "" &&
-        orderDetails.phone.prefix === "+421" &&
+      (orderDetails.phone.number !== '' &&
+        orderDetails.phone.prefix === '+421' &&
         !slovakPhoneRegex.test(orderDetails.phone.number)) ||
-      (orderDetails.phone.number !== "" &&
-        orderDetails.phone.prefix === "+49" &&
+      (orderDetails.phone.number !== '' &&
+        orderDetails.phone.prefix === '+49' &&
         !germanPhoneRegex.test(orderDetails.phone.number)) ||
-      (orderDetails.phone.number !== "" &&
-        orderDetails.phone.prefix === "+43" &&
+      (orderDetails.phone.number !== '' &&
+        orderDetails.phone.prefix === '+43' &&
         !austrianPhoneRegex.test(orderDetails.phone.number)) ||
-      (orderDetails.phone.number !== "" &&
-        orderDetails.phone.prefix === "+36" &&
+      (orderDetails.phone.number !== '' &&
+        orderDetails.phone.prefix === '+36' &&
         !hungarianPhoneRegex.test(orderDetails.phone.number))
     ) {
       setOrderDetails((prev) => ({
         ...prev,
-        errorMsgPhone: "Please enter a valid phone number",
-        inputBorderPhoneCSS: "ring-2 ring-red-500",
-      }));
-    } else if (orderDetails.phone.number !== "") {
+        errorMsgPhone: 'Please enter a valid phone number',
+        inputBorderPhoneCSS: 'ring-2 ring-red-500',
+      }))
+    } else if (orderDetails.phone.number !== '') {
       setOrderDetails((prev) => ({
         ...prev,
-        errorMsgPhone: "",
-        inputBorderPhoneCSS: "ring-2 ring-green-500",
-      }));
+        errorMsgPhone: '',
+        inputBorderPhoneCSS: 'ring-2 ring-green-500',
+      }))
     }
 
-    if (orderDetails.phone.number === "") {
+    if (orderDetails.phone.number === '') {
       setOrderDetails((prev) => ({
         ...prev,
-        errorMsgPhone: "",
-        inputBorderPhoneCSS: "",
-      }));
+        errorMsgPhone: '',
+        inputBorderPhoneCSS: '',
+      }))
     }
-  }, [
-    orderDetails.email,
-    orderDetails.phone.number,
-    orderDetails.phone.prefix,
-  ]);
+  }, [orderDetails.email, orderDetails.phone.number, orderDetails.phone.prefix])
 
   return (
     <div className="my-4 flex flex-col gap-2">
@@ -170,31 +182,31 @@ function CheckoutPage() {
             className="w-full border-none p-0 text-base outline-none focus:ring-0"
             onFocus={() =>
               setOrderDetails((prev) => {
-                if (prev.email !== "") return { ...prev };
+                if (prev.email !== '') return { ...prev }
                 return {
                   ...prev,
-                  inputBorderEmailCSS: "ring-2 ring-blue-500",
-                };
+                  inputBorderEmailCSS: 'ring-2 ring-blue-500',
+                }
               })
             }
             onBlur={() =>
               setOrderDetails((prev) => {
-                if (prev.errorMsgEmail === "" && prev.email !== "")
-                  return { ...prev };
-                return { ...prev, inputBorderEmailCSS: "" };
+                if (prev.errorMsgEmail === '' && prev.email !== '')
+                  return { ...prev }
+                return { ...prev, inputBorderEmailCSS: '' }
               })
             }
             onChange={(e) => {
               setOrderDetails((prev) => ({
                 ...prev,
                 email: e.target.value,
-              }));
+              }))
             }}
           />
-          {orderDetails.errorMsgEmail !== "" ? (
+          {orderDetails.errorMsgEmail !== '' ? (
             <Icons.RedX className="h-5 w-5" />
           ) : (
-            orderDetails.email !== "" && (
+            orderDetails.email !== '' && (
               <Icons.GreenCheck className="h-5 w-5" />
             )
           )}
@@ -260,18 +272,18 @@ function CheckoutPage() {
               className="w-full border-none p-0 text-base outline-none focus:ring-0"
               onFocus={() =>
                 setOrderDetails((prev) => {
-                  if (prev.phone.number !== "") return { ...prev };
+                  if (prev.phone.number !== '') return { ...prev }
                   return {
                     ...prev,
-                    inputBorderPhoneCSS: "ring-2 ring-blue-500",
-                  };
+                    inputBorderPhoneCSS: 'ring-2 ring-blue-500',
+                  }
                 })
               }
               onBlur={() =>
                 setOrderDetails((prev) => {
-                  if (prev.errorMsgPhone === "" && prev.phone.number !== "")
-                    return { ...prev };
-                  return { ...prev, inputBorderPhoneCSS: "" };
+                  if (prev.errorMsgPhone === '' && prev.phone.number !== '')
+                    return { ...prev }
+                  return { ...prev, inputBorderPhoneCSS: '' }
                 })
               }
               onChange={(e) => {
@@ -281,13 +293,13 @@ function CheckoutPage() {
                     ...prev.phone,
                     number: e.target.value,
                   },
-                }));
+                }))
               }}
             />
-            {orderDetails.errorMsgPhone !== "" ? (
+            {orderDetails.errorMsgPhone !== '' ? (
               <Icons.RedX className="h-5 w-5" />
             ) : (
-              orderDetails.phone.number !== "" && (
+              orderDetails.phone.number !== '' && (
                 <Icons.GreenCheck className="h-5 w-5" />
               )
             )}
@@ -296,8 +308,8 @@ function CheckoutPage() {
       </div>
       <div className="mx-6 my-6">
         <p className="text-lg font-semibold">Order Summary</p>
-        {cart.cart.map((item) => {
-          const totalItemPrice = item.price * +item.quantity;
+        {cart.items.map((item) => {
+          const totalItemPrice = item.price * +item.quantity
           return (
             <div
               className="relative mt-2 rounded-md bg-slate-50 px-2 py-4 md:flex md:items-start md:justify-between"
@@ -320,11 +332,11 @@ function CheckoutPage() {
                   </div>
                 </div>
                 <p className="font-semibold text-emerald-700">
-                  {formatNumberToCurrency(totalItemPrice, "USD")}
+                  {formatNumberToCurrency(totalItemPrice, 'USD')}
                 </p>
               </div>
             </div>
-          );
+          )
         })}
         <div className="relative mt-2 rounded-md bg-slate-50 px-2 py-4 md:flex md:items-start md:justify-between">
           <div className="flex items-center gap-2">
@@ -348,24 +360,24 @@ function CheckoutPage() {
         </div>
         <div className="mt-4 flex flex-col gap-2">
           <p className="inline-flex justify-between">
-            Total excl. VAT{" "}
-            <span>{formatNumberToCurrency(cartTotalBeforeTax, "USD")}</span>
+            Total excl. VAT{' '}
+            <span>{formatNumberToCurrency(cartTotalBeforeTax, 'USD')}</span>
           </p>
           <p className="inline-flex justify-between font-bold">
-            Estimated price{" "}
-            <span>{formatNumberToCurrency(cartTotal.totalAmount, "USD")}</span>
+            Estimated price{' '}
+            <span>{formatNumberToCurrency(cartTotal.totalAmount, 'USD')}</span>
           </p>
         </div>
       </div>
       <button
         type="button"
-        className={`mx-6 mt-6 inline-flex items-center justify-center gap-2 rounded-sm border border-transparent bg-blue-500 py-2 text-sm font-semibold uppercase text-white transition-all hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800`}
+        className={`${disabledCSS} mx-6 mt-6 inline-flex items-center justify-center gap-2 rounded-sm border border-transparent bg-blue-500 py-2 text-sm font-semibold uppercase text-white transition-all hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800`}
         onClick={handleOrderSubmit}
       >
         Complete order
       </button>
     </div>
-  );
+  )
 }
 
-export default CheckoutPage;
+export default CheckoutPage

@@ -1,19 +1,19 @@
-import { Route, redirect } from "react-router-dom";
-import { useAppSelector } from "../app/hooks";
-import { RootState } from "../redux/store";
+import { Navigate, Outlet, useLocation } from 'react-router-dom'
+import { useAppSelector } from '../redux/hooks'
 
-interface ProtectedRouteProps {
-  component: React.ComponentType<any>;
-  path: string;
+function PrivateRoutes() {
+  const location = useLocation()
+  const authLogin = useAppSelector((state) => state.auth.token)
+
+  if (authLogin === undefined) {
+    return null
+  }
+
+  return authLogin ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/login" replace state={{ from: location }} />
+  )
 }
 
-export function ProtectedRoute({
-  component: Component,
-  path,
-}: ProtectedRouteProps) {
-  const token = useAppSelector((state: RootState) => state.auth.token);
-
-  if (!token) return redirect("/login");
-
-  return <Route path={path} render={(props) => <Component {...props} />} />;
-}
+export default PrivateRoutes

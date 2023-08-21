@@ -1,5 +1,5 @@
-import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import {
   addItemToCart,
   applyDiscount,
@@ -7,34 +7,35 @@ import {
   removeItemFromCart,
   selectCartTotal,
   updateCartItemQuantity,
-} from "../redux/cart/cartSlice";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { formatNumberToCurrency } from "../utils/utils";
-import ProgressBar from "../components/ProgressBar";
+} from '../redux/cart/cartSlice'
+import { useAppDispatch, useAppSelector } from '../redux/hooks'
+import { formatNumberToCurrency } from '../utils/utils'
+import ProgressBar from '../components/ProgressBar'
 
 function CartPage() {
-  const [isHiddenCSS, setIsHiddenCSS] = useState("");
-  const discountRef = useRef<HTMLInputElement>(null);
+  const [isHiddenCSS, setIsHiddenCSS] = useState('')
+  const discountRef = useRef<HTMLInputElement>(null)
 
-  const cartTotal = useAppSelector((state) => selectCartTotal(state.cart));
-  const cartTotalBeforeTax = cartTotal.totalAmount / 1.21;
-  const cart = useAppSelector((state) => state.cart);
-  const discount = useAppSelector((state) => state.cart.discount);
+  const cartTotal = useAppSelector((state) => selectCartTotal(state.cart))
+  const cartTotalBeforeTax = cartTotal.totalAmount / 1.21
+  const cart = useAppSelector((state) => state.cart)
+  const discount = useAppSelector((state) => state.cart.discount)
+  console.log('CART PAGE', cart)
 
-  const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch()
 
   function toggleInputField() {
-    setIsHiddenCSS((prev) => (prev === "" ? "hidden" : ""));
+    setIsHiddenCSS((prev) => (prev === '' ? 'hidden' : ''))
   }
 
   function handleDiscountSubmit() {
-    const discount = discountRef.current?.value;
+    const discount = discountRef.current?.value
     if (discount) {
-      dispatch(applyDiscount(discount));
+      dispatch(applyDiscount(discount))
     }
   }
 
-  if (cart.cart.length === 0) {
+  if (cart.items.length === 0) {
     return (
       <div className="my-4 flex h-full flex-col justify-center gap-2">
         <div className="mx-6 my-6 flex flex-col">
@@ -58,15 +59,15 @@ function CartPage() {
           </Link>
         </div>
       </div>
-    );
+    )
   }
 
   return (
     <div className="my-4 flex flex-col gap-2">
       <ProgressBar />
 
-      {cart.cart.map((item) => {
-        const totalItemPrice = item.price * +item.quantity;
+      {cart.items.map((item) => {
+        const totalItemPrice = item.price * +item.quantity
         return (
           <div
             className="relative mx-4 mt-6 rounded-md bg-slate-50 px-2 py-4 md:flex md:items-start md:justify-between"
@@ -76,7 +77,7 @@ function CartPage() {
               type="button"
               className="absolute right-0 top-0 rounded-md border border-transparent p-1  text-sm font-semibold text-blue-500 transition-all hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               onClick={() => {
-                dispatch(deleteItemFromCart(item));
+                dispatch(deleteItemFromCart(item))
               }}
             >
               X
@@ -104,9 +105,9 @@ function CartPage() {
                   className="block w-12 rounded-md border-2 border-gray-200 px-2 py-1 text-sm focus:border-blue-500 focus:ring-blue-500"
                   value={item.quantity}
                   onChange={(e) => {
-                    const itemID = item.id;
+                    const itemID = item.id
                     const newQuantity =
-                      e.target.value !== "" ? +e.target.value : "";
+                      e.target.value !== '' ? +e.target.value : ''
 
                     dispatch(
                       updateCartItemQuantity({
@@ -116,7 +117,7 @@ function CartPage() {
                         price: item.price,
                         image: item.image,
                       })
-                    );
+                    )
                   }}
                 />
                 <div className="flex justify-between gap-1 md:flex-col-reverse md:gap-0">
@@ -125,7 +126,7 @@ function CartPage() {
                     className="inline-flex items-center justify-center gap-2 rounded-full border bg-white px-2 py-1 align-middle text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 focus:ring-offset-white dark:border-gray-700 dark:bg-slate-900 dark:text-gray-400 dark:hover:bg-slate-800 dark:hover:text-white dark:focus:ring-offset-gray-800"
                     disabled={item.quantity === 1}
                     onClick={() => {
-                      dispatch(removeItemFromCart(item));
+                      dispatch(removeItemFromCart(item))
                     }}
                   >
                     -
@@ -134,7 +135,7 @@ function CartPage() {
                     type="button"
                     className="inline-flex items-center justify-center gap-2 rounded-full border bg-white px-2 py-1 align-middle text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 focus:ring-offset-white dark:border-gray-700 dark:bg-slate-900 dark:text-gray-400 dark:hover:bg-slate-800 dark:hover:text-white dark:focus:ring-offset-gray-800"
                     onClick={() => {
-                      dispatch(addItemToCart(item));
+                      dispatch(addItemToCart(item))
                     }}
                   >
                     +
@@ -143,21 +144,21 @@ function CartPage() {
               </div>
 
               <p className="font-semibold text-emerald-700">
-                {formatNumberToCurrency(totalItemPrice, "USD")}
+                {formatNumberToCurrency(totalItemPrice, 'USD')}
               </p>
             </div>
           </div>
-        );
+        )
       })}
       <div className="mx-6 my-6 flex flex-col gap-2 md:flex-row md:justify-between">
         <div className="flex flex-col gap-2">
           <p className="inline-flex justify-between">
-            Total excl. VAT{" "}
-            <span>{formatNumberToCurrency(cartTotalBeforeTax, "USD")}</span>
+            Total excl. VAT{' '}
+            <span>{formatNumberToCurrency(cartTotalBeforeTax, 'USD')}</span>
           </p>
           <p className="inline-flex justify-between font-bold">
-            Estimated price{" "}
-            <span>{formatNumberToCurrency(cartTotal.totalAmount, "USD")}</span>
+            Estimated price{' '}
+            <span>{formatNumberToCurrency(cartTotal.totalAmount, 'USD')}</span>
           </p>
         </div>
         <div className="flex flex-col gap-2">
@@ -207,7 +208,7 @@ function CartPage() {
         </Link>
       </div>
     </div>
-  );
+  )
 }
 
-export default CartPage;
+export default CartPage

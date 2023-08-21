@@ -1,20 +1,21 @@
-import { useEffect, useState } from "react";
-import { fetchProductCategories } from "../api/store";
-import { NavLink, Path } from "react-router-dom";
-import { selectCartTotal } from "../redux/cart/cartSlice";
-import { useAppSelector } from "../redux/hooks";
+import { useEffect, useState } from 'react'
+import { fetchProductCategories } from '../api/store'
+import { NavLink, Path } from 'react-router-dom'
+import { selectCartTotal } from '../redux/cart/cartSlice'
+import { useAppSelector } from '../redux/hooks'
 
 function Navbar() {
-  const [productCategories, setProductCategories] = useState([]);
-  const cartTotal = useAppSelector((state) => selectCartTotal(state.cart));
-  const isHidden = cartTotal.totalItems === 0 ? "hidden" : "";
-
+  const [productCategories, setProductCategories] = useState([])
+  const cartTotal = useAppSelector((state) => selectCartTotal(state.cart))
+  const user = useAppSelector((state) => state.auth.user)
+  const isHidden = cartTotal.totalItems === 0 || !user ? 'hidden' : ''
+  console.log(user)
   useEffect(() => {
-    (async () => {
-      const data = await fetchProductCategories();
-      setProductCategories(data);
-    })();
-  }, []);
+    ;(async () => {
+      const data = await fetchProductCategories()
+      setProductCategories(data)
+    })()
+  }, [])
 
   return (
     <header className="container z-50 flex w-full flex-wrap bg-white py-4 text-sm dark:bg-gray-800 sm:flex-nowrap sm:justify-start xl:text-base ">
@@ -30,7 +31,7 @@ function Navbar() {
             Fake Store
           </a>
           <div className="flex gap-2 sm:hidden">
-            <NavLink to="/login">
+            <NavLink to={user ? '/user-profile' : '/login'}>
               <button
                 type="button"
                 className="hs-collapse-toggle relative inline-flex items-center justify-center gap-2 rounded-md border bg-white p-2 align-middle text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 focus:ring-offset-white dark:border-gray-700 dark:bg-slate-900 dark:text-gray-400 dark:hover:bg-slate-800 dark:hover:text-white dark:focus:ring-offset-gray-800"
@@ -117,9 +118,9 @@ function Navbar() {
           <div className="mt-5 flex flex-col gap-5 sm:mt-0 sm:flex-row sm:items-center sm:justify-end sm:pl-5">
             {productCategories.map((category, idx) => {
               const activeMenuItemCSS =
-                "first-letter:uppercase tex font-medium text-blue-600 hover:text-blue-400 dark:text-blue-400 dark:hover:text-blue-500";
+                'first-letter:uppercase tex font-medium text-blue-600 hover:text-blue-400 dark:text-blue-400 dark:hover:text-blue-500'
               const inActiveMenuItemCSS =
-                "first-letter:uppercase font-medium text-gray-600 hover:text-gray-400 dark:text-gray-400 dark:hover:text-gray-500";
+                'first-letter:uppercase font-medium text-gray-600 hover:text-gray-400 dark:text-gray-400 dark:hover:text-gray-500'
               return (
                 <NavLink
                   className={({ isActive }) =>
@@ -130,7 +131,7 @@ function Navbar() {
                 >
                   {category}
                 </NavLink>
-              );
+              )
             })}
             <NavLink to="/cart/1" className="hidden sm:block">
               <button
@@ -163,7 +164,7 @@ function Navbar() {
         </div>
       </nav>
     </header>
-  );
+  )
 }
 
-export default Navbar;
+export default Navbar
