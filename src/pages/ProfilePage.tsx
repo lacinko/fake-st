@@ -3,13 +3,14 @@ import Button from '../components/Button'
 import { useAppDispatch } from '../redux/hooks'
 import { useAuth } from '../redux/user/userHooks'
 import { logout } from '../redux/user/userSlice'
+import { OrderItem } from '../types/types'
+import { CartItem } from '../redux/cart/cartSlice'
 
 function ProfilePage() {
   const { user } = useAuth()
   const [orders, setOrders] = useState(
     JSON.parse(localStorage.getItem('orders') as string)
   )
-  console.log(orders)
   const dispatch = useAppDispatch()
   console.log('PROFILE PAGE')
 
@@ -49,13 +50,40 @@ function ProfilePage() {
         </span>
         <h2 className="text-xl font-bold tracking-wider ">{user?.username}</h2>
       </div>
+      <div className="mt-6 text-xl font-bold uppercase tracking-wider text-blue-500">
+        My Orders
+      </div>
       <button className="mt-4 w-full rounded-md bg-slate-100 px-4 py-3 text-left">
-        <span className="text-xl font-bold uppercase tracking-wider text-blue-500">
-          My Orders
-        </span>
-        {orders?.map((order) => (
-          <div>{order.id}</div>
-        ))}
+        {orders?.map((order: OrderItem) => {
+          return (
+            <div>
+              <div className="mt-3 inline-flex w-full items-center justify-between text-sm">
+                <p className="text-gray-800">{order.date}</p>
+                <p className="font-semibold text-green-600">{order.id}</p>
+                <p className="font-semibold text-red-600">{order.total}</p>
+              </div>
+              <div className="mt-2 inline-flex items-center gap-2">
+                {order.cart.map((item: CartItem) => {
+                  const isHidden = +item.quantity > 1 ? '' : 'hidden'
+                  return (
+                    <div className="relative" key={item.id}>
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="h-10 w-10 bg-white object-contain p-1"
+                      />
+                      <span
+                        className={`${isHidden} absolute bottom-[-10%] right-[-10%] rounded-full bg-blue-500 px-2 py-1 text-xs font-bold leading-none text-red-100`}
+                      >
+                        {item.quantity}
+                      </span>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )
+        })}
       </button>
       <Button handleOnClick={handleLogout} styles="w-full mt-8 uppercase">
         Logout

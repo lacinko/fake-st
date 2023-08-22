@@ -6,6 +6,7 @@ import { useAppSelector } from '../redux/hooks'
 import { formatNumberToCurrency } from '../utils/utils'
 import { deliveryOptions, paymentOptions } from '../redux/cart/OrderOptions'
 import { selectCartTotal } from '../redux/cart/cartSlice'
+import { OrderItem } from '../types/types'
 
 function CheckoutPage() {
   const delivery = useAppSelector((state) => state.cart.delivery)
@@ -58,12 +59,14 @@ function CheckoutPage() {
     inputBorderPhoneCSS: '',
   })
   const [isExpanded, setIsExpanded] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const expandedCSS = isExpanded ? 'flex' : 'hidden'
   const disabledCSS =
-    orderDetails.phone.number &&
-    orderDetails.email &&
-    !orderDetails.errorMsgEmail &&
-    !orderDetails.errorMsgPhone
+    (orderDetails.phone.number &&
+      orderDetails.email &&
+      !orderDetails.errorMsgEmail &&
+      !orderDetails.errorMsgPhone) ||
+    !isLoading
       ? ''
       : 'opacity-50 pointer-events-none'
 
@@ -83,17 +86,42 @@ function CheckoutPage() {
     setIsExpanded(false)
   }
 
-  function handleOrderSubmit() {
+  async function handleOrderSubmit() {
     const order = {
       id: `ORD-${Math.floor(Math.random() * 1000000)}`,
+      date: new Date().toLocaleDateString(),
       email: orderDetails.email,
       phone: `${orderDetails.phone.prefix} ${orderDetails.phone.number}`,
       delivery: deliveryOption?.label,
       payment: paymentOption?.label,
       cart: cart.items,
       total: formatNumberToCurrency(cartTotal.totalAmount, 'USD'),
+    } as OrderItem
+
+    try {
+      setIsLoading(true)
+      const response = await sendOrder(order)
+      console.log(response)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setIsLoading(false)
     }
-    localStorage.setItem('orders', JSON.stringify([order]))
+  }
+
+  function sendOrder(order: OrderItem) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (order) {
+          const orders =
+            JSON.parse(localStorage.getItem('orders') as string) || []
+          localStorage.setItem('orders', JSON.stringify([...orders, order]))
+          resolve('Order submitted')
+        } else {
+          reject('Order is not valid')
+        }
+      }, 2000)
+    })
   }
 
   useEffect(() => {
@@ -373,8 +401,18 @@ function CheckoutPage() {
         type="button"
         className={`${disabledCSS} mx-6 mt-6 inline-flex items-center justify-center gap-2 rounded-sm border border-transparent bg-blue-500 py-2 text-sm font-semibold uppercase text-white transition-all hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800`}
         onClick={handleOrderSubmit}
+        disabled={isLoading}
       >
-        Complete order
+        Complete order{' '}
+        {isLoading && (
+          <div
+            className="inline-block h-6 w-6 animate-spin rounded-full border-[3px] border-current border-t-transparent text-gray-400"
+            role="status"
+            aria-label="loading"
+          >
+            <span className="sr-only">Loading...</span>
+          </div>
+        )}
       </button>
     </div>
   )
