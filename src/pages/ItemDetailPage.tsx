@@ -25,9 +25,6 @@ function ItemDetailPage() {
   const isInStock = product.id % 2 === 0
   const cart = useAppSelector((state) => state.cart)
   const isInCart = cart.items.some((item) => item.id === product.id)
-  const productQuantity = cart.items.find(
-    (item) => item.id === product.id
-  )?.quantity
 
   function handleOnClick() {
     const productInfo = {

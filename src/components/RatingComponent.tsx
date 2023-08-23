@@ -5,7 +5,7 @@ type Props = {
 function RatingComponent({ rating }: Props) {
   const stars = Array(5)
     .fill(0)
-    .map((e, i) => i + 1)
+    .map((_, i) => i + 1)
   return (
     <div className="flex gap-2">
       {stars.map((star) => {

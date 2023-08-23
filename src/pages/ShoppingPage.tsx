@@ -1,6 +1,6 @@
 import { useLoaderData, useParams } from 'react-router-dom'
 import SearchBar from '../components/SearchBar'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import ItemCard from '../components/ItemCard'
 import { ItemCardObject } from '../types/types'
 import Dropdown from '../components/Dropdown'

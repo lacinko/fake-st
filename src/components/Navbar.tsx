@@ -12,7 +12,7 @@ function Navbar() {
   const isUserLoggedIn = user ? '' : 'hidden'
 
   useEffect(() => {
-    ;(async () => {
+    (async () => {
       const data = await fetchProductCategories()
       setProductCategories(data)
     })()

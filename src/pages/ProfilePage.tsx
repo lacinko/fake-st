@@ -31,9 +31,8 @@ function ProfilePage() {
     zipcode = 8,
   }
 
-  const [orders, setOrders] = useState(
-    JSON.parse(localStorage.getItem('orders') as string)
-  )
+  const orders = JSON.parse(localStorage.getItem('orders') as string)
+
   const dispatch = useAppDispatch()
 
   function handleLogout() {
@@ -46,9 +45,10 @@ function ProfilePage() {
   }
 
   async function handleUserInfoSubmit() {
+    const userInfoObjPost = userInfo as UserInfo
     try {
       const response = await fetch(
-        `https://fakestoreapi.com/users/${userInfo?.id}`,
+        `https://fakestoreapi.com/users/${userInfoObjPost?.id}`,
         {
           method: 'PUT',
           headers: {
@@ -58,7 +58,7 @@ function ProfilePage() {
         }
       )
 
-      console.log('userInfoUpdated')
+      console.log('userInfoUpdated', response)
     } catch (error) {
       console.error(error)
     } finally {

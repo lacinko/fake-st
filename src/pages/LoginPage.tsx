@@ -82,7 +82,16 @@ function LoginPage() {
           </div>
         </div>
         <Button handleOnClick={handleLogin} styles="w-full mt-8 uppercase">
-          Login
+          Login{' '}
+          {isLoading && (
+            <div
+              className="inline-block h-6 w-6 animate-spin rounded-full border-[3px] border-current border-t-transparent text-gray-400"
+              role="status"
+              aria-label="loading"
+            >
+              <span className="sr-only">Loading...</span>
+            </div>
+          )}
         </Button>
       </div>
     </div>

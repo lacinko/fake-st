@@ -28,7 +28,7 @@ export function formatNumberToCurrency(num: number, currency: string) {
 }
 
 export function flattenObject(obj: object, prefix = ''): object {
-  const flattened = {} as Record<string, any>
+  const flattened = {} as Record<string, string | number | Date | boolean>
 
   for (const [key, value] of Object.entries(obj)) {
     const newKey = prefix ? `${prefix}.${key}` : key

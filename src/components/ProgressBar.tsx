@@ -1,10 +1,10 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from 'react-router-dom'
 
 function ProgressBar() {
-  const location = useLocation();
-  const stage = location.pathname.split("/")[2];
-  const stageInt = parseInt(stage!);
-  const progressBubbles = [1, 2, 3];
+  const location = useLocation()
+  const stage = location.pathname.split('/')[2]
+  const stageInt = parseInt(stage as string)
+  const progressBubbles = [1, 2, 3]
   /*
   const progressBubbleLabels = [
     "Basket",
@@ -15,13 +15,13 @@ function ProgressBar() {
   function setProgressBarWidth(stage: number) {
     switch (stage) {
       case 1:
-        return "";
+        return ''
       case 2:
-        return "w-[50%]";
+        return 'w-[50%]'
       case 3:
-        return "w-[90%]";
+        return 'w-[90%]'
       default:
-        return "";
+        return ''
     }
   }
 
@@ -35,11 +35,11 @@ function ProgressBar() {
           )} absolute left-4 top-1/2 -z-10 h-2 bg-blue-600`}
         ></div>
         {progressBubbles.map((bubble) => {
-          const bubbleLabel = bubble < stageInt ? "✓" : bubble;
+          const bubbleLabel = bubble < stageInt ? '✓' : bubble
           const bubbleCSSBGColor =
             bubble <= stageInt
-              ? "bg-blue-600 text-white"
-              : "bg-slate-100 text-gray-500";
+              ? 'bg-blue-600 text-white'
+              : 'bg-slate-100 text-gray-500'
           return (
             <Link
               to={`/cart/${bubble}`}
@@ -48,14 +48,14 @@ function ProgressBar() {
             >
               {bubbleLabel}
             </Link>
-          );
+          )
         })}
       </div>
     </div>
-  );
+  )
 }
 
-export default ProgressBar;
+export default ProgressBar
 
 /*
         <div className="mx-8 mt-4 flex justify-between">
