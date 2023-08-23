@@ -136,7 +136,10 @@ export const cartSlice = createSlice({
       }
     },
     resetCart: (state: CartState) => {
-      state = initialState
+      state.items = initialState.items
+      state.delivery = initialState.delivery
+      state.payment = initialState.payment
+      state.discount = initialState.discount
       localStorage.removeItem('cartItems')
     },
   },
