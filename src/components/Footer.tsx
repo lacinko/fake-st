@@ -14,7 +14,7 @@ function Footer() {
           <div className="col-span-1">
             <h4 className="font-semibold ">Shopping</h4>
 
-            <div className="mt-3 grid space-y-3">
+            <div className="mt-3 grid space-y-3 text-sm md:text-base">
               <p>
                 <a
                   className="inline-flex gap-x-2 text-gray-800 hover:text-gray-950"
@@ -45,7 +45,7 @@ function Footer() {
           <div className="col-span-1">
             <h4 className="font-semibold">Company</h4>
 
-            <div className="mt-3 grid space-y-3">
+            <div className="mt-3 grid space-y-3 text-sm md:text-base">
               <p>
                 <a
                   className="inline-flex gap-x-2 text-gray-800 hover:text-gray-950"
@@ -69,7 +69,7 @@ function Footer() {
                 >
                   Careers
                 </a>{' '}
-                <span className="ml-1 inline rounded-md bg-blue-500 px-2 py-1 text-xs text-white">
+                <span className="ml-1 inline rounded-md bg-blue-500 px-2 py-1 text-xs text-white ">
                   We're hiring
                 </span>
               </p>
@@ -85,7 +85,7 @@ function Footer() {
           </div>
 
           <div className="col-span-2">
-            <h4 className="font-semibold">Stay up to date</h4>
+            <h4 className="font-semibold">Sign to our newsletter</h4>
 
             <form>
               <div className="mt-4 flex flex-col items-center gap-2 rounded-md bg-white p-2 sm:flex-row sm:gap-3">

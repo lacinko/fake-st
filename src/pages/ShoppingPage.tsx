@@ -55,7 +55,7 @@ function ShoppingPage() {
   )
 
   return (
-    <div className="container my-4 text-sm">
+    <div className="container my-10 text-sm">
       <SearchBar
         placeholder={`Search for ${category}`}
         onChange={(e) => setSearchTerm(e.target.value)}

@@ -77,14 +77,6 @@ function ItemDetailPage() {
         </p>
       </div>
       <div className="mt-4 flex items-center gap-2">
-        <div>
-          <label htmlFor="Quantity">Quantity</label>
-          <div>
-            <button>-</button>
-            <input type="number" className="w-10" />
-            <button>+</button>
-          </div>
-        </div>
         <Button handleOnClick={handleOnClick} styles="w-full">
           {isInCart ? `Add more` : 'Add to cart'}
         </Button>

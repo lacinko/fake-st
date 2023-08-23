@@ -3,11 +3,34 @@ import Button from '../components/Button'
 import { useAppDispatch } from '../redux/hooks'
 import { useAuth } from '../redux/user/userHooks'
 import { logout } from '../redux/user/userSlice'
-import { OrderItem } from '../types/types'
+import { OrderItem, UserInfo } from '../types/types'
 import { CartItem } from '../redux/cart/cartSlice'
+import { useLoaderData } from 'react-router-dom'
+import { flattenObject } from '../utils/utils'
+import Accordion from '../components/Accordion'
 
 function ProfilePage() {
   const { user } = useAuth()
+  const { users } = useLoaderData() as { users: UserInfo[] }
+  const objectKeys = ['username', 'password', '__v', 'lat', 'long']
+  const [userInfo, setUserInfo] = useState(
+    flattenObject(
+      users.find((userInfo) => userInfo.username === user?.username) as object
+    )
+  )
+
+  enum userInfoID {
+    id = 0,
+    firstname = 1,
+    lastname = 2,
+    email = 3,
+    phone = 4,
+    street = 5,
+    number = 6,
+    city = 7,
+    zipcode = 8,
+  }
+
   const [orders, setOrders] = useState(
     JSON.parse(localStorage.getItem('orders') as string)
   )
@@ -17,10 +40,36 @@ function ProfilePage() {
     dispatch(logout())
   }
 
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value } = e.target
+    setUserInfo((prev) => ({ ...prev, [name]: value }))
+  }
+
+  async function handleUserInfoSubmit() {
+    try {
+      const response = await fetch(
+        `https://fakestoreapi.com/users/${userInfo?.id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(userInfo),
+        }
+      )
+
+      console.log('userInfoUpdated')
+    } catch (error) {
+      console.error(error)
+    } finally {
+      console.log('FINALLY')
+    }
+  }
+
   return (
-    <div>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-6">
+    <div className="mb-10 mt-4">
+      <div className="mb-6 flex items-center justify-between">
+        <div className="flex items-center gap-2">
           <span className="inline-block h-[2.875rem] w-[2.875rem] overflow-hidden rounded-full bg-gray-100">
             <svg
               className="h-full w-full text-gray-300"
@@ -48,7 +97,7 @@ function ProfilePage() {
               />
             </svg>
           </span>
-          <h2 className="text-xl font-bold tracking-wider ">
+          <h2 className="text-lg font-bold tracking-wider ">
             {user?.username}
           </h2>
         </div>
@@ -56,11 +105,61 @@ function ProfilePage() {
           Logout
         </Button>
       </div>
-      <div className="mt-6 text-xl font-bold uppercase tracking-wider text-blue-500">
-        My Orders
-      </div>
 
-      <button className="mt-4 w-full rounded-md bg-slate-100 px-4 py-3 text-left">
+      <Accordion title="My Info">
+        <div className="flex flex-col">
+          {Object.entries(userInfo)
+            .filter(([key]) => !objectKeys.includes(key))
+            .map(([key, value]) => {
+              const id = userInfoID[key as keyof typeof userInfoID]
+              return {
+                id: id,
+                key: key,
+                value: value,
+              }
+            })
+            .sort((a, b) => a.id - b.id)
+            .map((info) => {
+              if (info.key === 'id') return
+
+              const capitalizedStr =
+                info.key.charAt(0).toUpperCase() + info.key.slice(1)
+              const multipleWords = capitalizedStr.includes('name')
+              const formatedKey = multipleWords
+                ? capitalizedStr.split('n').join(' n')
+                : capitalizedStr
+
+              return (
+                <div
+                  key={info.key}
+                  className="mt-4 flex items-center justify-between gap-4"
+                >
+                  <label
+                    htmlFor={info.key}
+                    className="mb-2 block whitespace-nowrap text-sm font-medium dark:text-white"
+                  >
+                    {formatedKey}
+                  </label>
+                  <input
+                    type="text"
+                    name={info.key}
+                    id={info.key}
+                    className="block w-3/4 rounded-md border-gray-200 px-4 py-3 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:bg-slate-900 dark:text-gray-400"
+                    value={info.value.toString()}
+                    onChange={handleChange}
+                  />
+                </div>
+              )
+            })}
+          <div className="mx-2 my-4 flex justify-end">
+            <Button styles="uppercase" handleOnClick={handleUserInfoSubmit}>
+              Save
+            </Button>
+          </div>
+        </div>
+      </Accordion>
+
+      <Accordion title="My orders">
         {orders?.map((order: OrderItem) => {
           return (
             <div key={order.id} className="lg:inline-flex lg:w-full ">
@@ -119,7 +218,7 @@ function ProfilePage() {
             </div>
           )
         })}
-      </button>
+      </Accordion>
     </div>
   )
 }
