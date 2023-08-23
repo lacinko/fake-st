@@ -19,18 +19,16 @@ function Navbar() {
   }, [])
 
   return (
-    <header className="container z-50 flex w-full flex-wrap bg-white py-4 text-sm dark:bg-gray-800 sm:flex-nowrap sm:justify-start xl:text-base ">
+    <header className="container z-50 flex w-full flex-wrap bg-slate-100 py-4 text-sm dark:bg-gray-800 sm:flex-nowrap sm:justify-start xl:text-base ">
       <nav
         className=" mx-auto w-full sm:flex sm:items-center sm:justify-between"
         aria-label="Global"
       >
         <div className="flex items-center justify-between">
-          <a
-            className="flex-none text-xl font-semibold dark:text-white"
-            href="#"
-          >
-            Fake Store
-          </a>
+          <NavLink to="/electronics">
+            <img src="/logo.png" alt="logo" className="w-32" />
+          </NavLink>
+          <h1 className="hidden">Fake Store</h1>
           <div className="flex gap-2 sm:hidden">
             <NavLink to={user ? '/user-profile' : '/login'}>
               <button

@@ -14,6 +14,7 @@ import LoginPage from './pages/LoginPage.tsx'
 import ProfilePage from './pages/ProfilePage.tsx'
 import PrivateRoutes from './components/ProtectedRoute.tsx'
 import ItemDetailPage from './pages/ItemDetailPage.tsx'
+import { ItemCardObject } from './types/types.ts'
 import('preline')
 
 const router = createBrowserRouter([
@@ -25,6 +26,20 @@ const router = createBrowserRouter([
       {
         path: ':category',
         element: <ShoppingPage />,
+        loader: async ({ params }) => {
+          const response = await fetch(
+            `https://fakestoreapi.com/products/category/${params.category}`
+          )
+          const data = await response.json()
+          const dataWithDates = data.map((item: ItemCardObject) => {
+            const currentDate = new Date()
+            const randomDate = new Date(
+              currentDate.getTime() - Math.random() * 10000000000
+            )
+            return { ...item, createdAt: randomDate }
+          })
+          return { products: dataWithDates }
+        },
       },
       {
         path: ':category/:id',
