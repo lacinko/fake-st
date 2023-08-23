@@ -90,9 +90,11 @@ export const cartSlice = createSlice({
     },
     deleteItemFromCart: (state: CartState, action: PayloadAction<CartItem>) => {
       const { payload } = action
+
       const cartItemIndex = state.items.findIndex(
-        (item: CartItem) => item.id !== payload.id
+        (item: CartItem) => item.id === payload.id
       )
+
       state.items.splice(cartItemIndex, 1)
       //RESET CART STATE
       if (state.items.length === 0) {
@@ -133,6 +135,10 @@ export const cartSlice = createSlice({
         state.payment = value === state.payment ? '' : value
       }
     },
+    resetCart: (state: CartState) => {
+      state = initialState
+      localStorage.removeItem('cartItems')
+    },
   },
 })
 
@@ -140,7 +146,6 @@ const selectCart = (state: CartState) => state.items
 const selectDiscount = (state: CartState) => state.discount.value
 
 const cartTotal = (cart: CartItem[], discount: number) => {
-  console.log('CART', cart)
   return {
     totalAmount:
       cart.reduce((acc, item) => {
@@ -165,6 +170,7 @@ export const {
   deleteItemFromCart,
   applyDiscount,
   selectDeliveryAndPaymentOption,
+  resetCart,
 } = cartSlice.actions
 
 // Create the middleware instance and methods

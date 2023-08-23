@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react'
 import ProgressBar from '../components/ProgressBar'
 import { Link } from 'react-router-dom'
 import { Icons } from '../icons/icons'
-import { useAppSelector } from '../redux/hooks'
+import { useAppDispatch, useAppSelector } from '../redux/hooks'
 import { formatNumberToCurrency } from '../utils/utils'
 import { deliveryOptions, paymentOptions } from '../redux/cart/OrderOptions'
-import { selectCartTotal } from '../redux/cart/cartSlice'
+import { resetCart, selectCartTotal } from '../redux/cart/cartSlice'
 import { OrderItem } from '../types/types'
 
 function CheckoutPage() {
@@ -14,6 +14,7 @@ function CheckoutPage() {
   const cart = useAppSelector((state) => state.cart)
   const cartTotal = useAppSelector((state) => selectCartTotal(state.cart))
   const cartTotalBeforeTax = cartTotal.totalAmount / 1.21
+  const dispatch = useAppDispatch()
 
   const deliveryOption = deliveryOptions.find(
     (option) => option.id === delivery
@@ -101,12 +102,29 @@ function CheckoutPage() {
     try {
       setIsLoading(true)
       const response = await sendOrder(order)
+      clearOrder()
       console.log(response)
     } catch (error) {
       console.error(error)
     } finally {
       setIsLoading(false)
     }
+  }
+
+  function clearOrder() {
+    setOrderDetails({
+      email: '',
+      phone: {
+        image: mobilePrefixes[0].image,
+        prefix: mobilePrefixes[0].prefix,
+        number: '',
+      },
+      errorMsgEmail: '',
+      errorMsgPhone: '',
+      inputBorderEmailCSS: '',
+      inputBorderPhoneCSS: '',
+    })
+    dispatch(resetCart())
   }
 
   function sendOrder(order: OrderItem) {

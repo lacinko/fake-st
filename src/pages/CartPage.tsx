@@ -20,7 +20,6 @@ function CartPage() {
   const cartTotalBeforeTax = cartTotal.totalAmount / 1.21
   const cart = useAppSelector((state) => state.cart)
   const discount = useAppSelector((state) => state.cart.discount)
-  console.log('CART PAGE', cart)
 
   const dispatch = useAppDispatch()
 

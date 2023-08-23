@@ -1,5 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
-import cartReducer, { cartListenerMiddleware } from './cart/cartSlice'
+import cartReducer, {
+  cartListenerMiddleware,
+  initialState,
+} from './cart/cartSlice'
 import authReducer, { userListenerMiddleware } from './user/userSlice'
 import { api } from './api/authApi'
 
@@ -17,7 +20,8 @@ export const store = configureStore({
       userListenerMiddleware.middleware
     ),
   preloadedState: {
-    cart: JSON.parse(localStorage.getItem('cartItems') as string) || [],
+    cart:
+      JSON.parse(localStorage.getItem('cartItems') as string) || initialState,
     auth: JSON.parse(localStorage.getItem('userInfo') as string) || {},
   },
 })
